@@ -1,0 +1,45 @@
+{
+  "name": "echoprep-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "EchoPrep frontend: React + Vite single-page app. Practice out loud. Land the role.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest --run --passWithNoTests",
+    "test:watch": "vitest",
+    "lint": "eslint \"src/**/*.{js,jsx}\" \"test/**/*.{js,jsx}\"",
+    "format": "prettier --write \"**/*.{js,jsx,css,html,json,md}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,css,html,json,md}\""
+  },
+  "dependencies": {
+    "axios": "1.7.7",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "6.26.2",
+    "recharts": "2.12.7"
+  },
+  "devDependencies": {
+    "@axe-core/react": "4.10.0",
+    "@testing-library/react": "16.0.1",
+    "@testing-library/user-event": "14.5.2",
+    "@vitejs/plugin-react": "4.3.1",
+    "autoprefixer": "10.4.20",
+    "culori": "4.0.1",
+    "eslint": "8.57.1",
+    "fast-check": "3.22.0",
+    "jsdom": "25.0.1",
+    "msw": "2.4.9",
+    "postcss": "8.4.47",
+    "prettier": "3.3.3",
+    "tailwindcss": "3.4.13",
+    "vite": "5.4.8",
+    "vitest": "2.1.2"
+  },
+  "engines": {
+    "node": ">=20.11.0",
+    "npm": ">=10.0.0"
+  }
+}

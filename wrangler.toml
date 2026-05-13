@@ -1,0 +1,6 @@
+name = "echoprep"
+compatibility_date = "2026-05-13"
+pages_build_output_dir = "./dist"
+
+[vars]
+VITE_API_BASE_URL = "https://echoprep-api.isher.dev/api"
