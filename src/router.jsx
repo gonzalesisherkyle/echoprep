@@ -34,13 +34,14 @@ function PublicOnlyRoute() {
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
       <Route element={<PublicOnlyRoute />}>
+        <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Route>
+
 
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardPage />} />
