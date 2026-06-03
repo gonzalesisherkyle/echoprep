@@ -24,3 +24,19 @@ export async function forgotPassword({ email }) {
   return apiClient.post('/auth/forgot-password', { email });
 }
 
+/**
+ * Confirm the password reset verification code.
+ * @param {{ email: string, code: string }} payload
+ */
+export async function verifyResetCode({ email, code }) {
+  return apiClient.post('/auth/verify-reset-code', { email, code });
+}
+
+/**
+ * Reset a password after the verification code has been confirmed.
+ * @param {{ email: string, resetToken: string, password: string }} payload
+ */
+export async function resetPassword({ email, resetToken, password }) {
+  return apiClient.post('/auth/reset-password', { email, resetToken, password });
+}
+

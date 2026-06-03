@@ -10,6 +10,10 @@ export function Input({
   autoComplete,
   isDisabled = false,
   className = '',
+  inputMode,
+  maxLength,
+  minLength,
+  pattern,
 }) {
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
@@ -29,6 +33,10 @@ export function Input({
         onChange={onChange}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        inputMode={inputMode}
+        maxLength={maxLength}
+        minLength={minLength}
+        pattern={pattern}
         disabled={isDisabled}
         className={`
           input-field
