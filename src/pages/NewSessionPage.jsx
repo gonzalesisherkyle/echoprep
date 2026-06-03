@@ -87,9 +87,9 @@ export function NewSessionPage() {
                 placeholder="Ex: We are looking for a Software Engineer..."
                 className={`
                   w-full rounded-md bg-surface-container-low border-2 px-4 py-3 text-sm text-text
-                  placeholder:text-white/10 resize-none outline-none transition-all duration-200
-                  ${validationError ? 'border-error/30' : 'border-white/5 focus:border-primary/30'}
-                  ${isSubmitting ? 'opacity-50 grayscale' : ''}
+                  placeholder:text-white/10 resize-none outline-none transition-all duration-300
+                  ${validationError ? 'border-error/30 focus:border-error/50' : 'border-white/5 focus:border-primary/50 focus:ring-4 focus:ring-primary/5 focus:bg-surface-container'}
+                  ${isSubmitting ? 'opacity-50 grayscale cursor-not-allowed' : ''}
                 `}
               />
 

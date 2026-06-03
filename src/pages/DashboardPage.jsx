@@ -80,17 +80,23 @@ export function DashboardPage() {
             streakCount={user?.streakCount ?? 0}
             lastActiveDate={user?.lastActiveDate ?? null}
           />
-          <Card className="md:col-span-2 flex flex-col justify-center">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted mb-1">Average Score</p>
-                <h3 className="text-3xl font-bold text-text">
-                  {completedSessions.length > 0 
-                    ? Math.round(completedSessions.reduce((acc, s) => acc + s.overallScore, 0) / completedSessions.length)
-                    : 0}%
+          <Card padding="lg" className="md:col-span-2 flex flex-col justify-center relative overflow-hidden group border-white/5 hover:border-primary/20 transition-all duration-300">
+            {/* Ambient Background Gradient Glow */}
+            <div className="absolute -top-12 -right-12 w-32 h-32 bg-primary/5 blur-3xl rounded-full group-hover:bg-primary/10 transition-all duration-300 pointer-events-none" />
+            
+            <div className="flex items-center justify-between gap-4 relative z-10">
+              <div className="flex flex-col gap-1">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted">Average Score</p>
+                <h3 className="text-4xl font-bold text-text tracking-tight flex items-baseline gap-1">
+                  <span>
+                    {completedSessions.length > 0 
+                      ? Math.round(completedSessions.reduce((acc, s) => acc + s.overallScore, 0) / completedSessions.length)
+                      : 0}
+                  </span>
+                  <span className="text-xl text-muted font-semibold">%</span>
                 </h3>
               </div>
-              <div className="w-12 h-12 rounded-full border-2 border-primary/20 border-t-primary flex items-center justify-center text-primary font-bold text-xs">
+              <div className="w-12 h-12 rounded-full border border-primary/35 bg-primary/10 text-primary flex items-center justify-center font-mono font-bold text-xs shadow-[0_0_15px_rgba(107,216,203,0.15)] tracking-wider">
                 AI
               </div>
             </div>
@@ -115,7 +121,7 @@ export function DashboardPage() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
             <div className="lg:col-span-2 flex flex-col gap-6 md:gap-8">
-              <Card padding="md">
+              <Card padding="md" className="border-white/5 bg-surface-container-low/50 backdrop-blur-md">
                 <h3 className="text-base font-bold text-text mb-6">Score History</h3>
                 <ProgressChart
                   points={chartPoints}
@@ -123,7 +129,7 @@ export function DashboardPage() {
                 />
               </Card>
 
-              <Card padding="md">
+              <Card padding="md" className="border-white/5 bg-surface-container-low/50 backdrop-blur-md">
                  <h3 className="text-base font-bold text-text mb-4">Recent Activity</h3>
                  <SessionHistoryList
                   sessions={recentSessions}
@@ -141,7 +147,7 @@ export function DashboardPage() {
                </Card>
 
                {feedbackHistory.length > 0 && (
-                <Card padding="md">
+                <Card padding="md" className="border-white/5 bg-surface-container-low/50 backdrop-blur-md">
                   <h3 className="text-base font-bold text-text mb-4">Key Insights</h3>
                   <ul className="flex flex-col gap-3" role="list">
                     {feedbackHistory.map((feedback, index) => (
@@ -162,4 +168,3 @@ export function DashboardPage() {
 }
 
 export default DashboardPage;
-

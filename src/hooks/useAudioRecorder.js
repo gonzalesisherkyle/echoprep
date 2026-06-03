@@ -5,6 +5,7 @@ export function useAudioRecorder() {
   const [audioBlob, setAudioBlob] = useState(null);
   const [durationMs, setDurationMs] = useState(null);
   const [error, setError] = useState(null);
+  const [stream, setStream] = useState(null);
 
   const mediaRecorderRef = useRef(null);
   const streamRef = useRef(null);
@@ -24,9 +25,9 @@ export function useAudioRecorder() {
     setDurationMs(null);
     chunksRef.current = [];
 
-    let stream;
+    let activeStream;
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      activeStream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch (err) {
       const isDenied =
         err.name === 'NotAllowedError' ||
@@ -40,18 +41,20 @@ export function useAudioRecorder() {
       return;
     }
 
-    streamRef.current = stream;
+    streamRef.current = activeStream;
+    setStream(activeStream);
 
     const mimeType = getSupportedMimeType();
     const options = mimeType ? { mimeType } : {};
 
     let recorder;
     try {
-      recorder = new MediaRecorder(stream, options);
+      recorder = new MediaRecorder(activeStream, options);
     } catch (err) {
       setError(`Could not create MediaRecorder: ${err.message}`);
-      stream.getTracks().forEach((t) => t.stop());
+      activeStream.getTracks().forEach((t) => t.stop());
       streamRef.current = null;
+      setStream(null);
       return;
     }
 
@@ -71,6 +74,7 @@ export function useAudioRecorder() {
       setAudioBlob(blob);
       setDurationMs(elapsed);
       setIsRecording(false);
+      setStream(null);
 
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((t) => t.stop());
@@ -113,6 +117,7 @@ export function useAudioRecorder() {
     setDurationMs(null);
     setError(null);
     setIsRecording(false);
+    setStream(null);
   }
 
   return {
@@ -123,8 +128,8 @@ export function useAudioRecorder() {
     audioBlob,
     durationMs,
     error,
+    stream,
   };
 }
 
 export default useAudioRecorder;
-

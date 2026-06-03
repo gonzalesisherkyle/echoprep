@@ -25,19 +25,57 @@ export function ScoreCard({ label, score, isReducedMotion }) {
   const radius = 28; // Smaller radius
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (displayed / 100) * circumference;
+  
+  const isHighScore = score >= 80;
 
   return (
-    <div className="group relative flex flex-col items-center justify-center p-4 rounded-xl bg-surface-container-high border border-white/5 transition-all">
+    <div className="group relative flex flex-col items-center justify-center p-4 rounded-xl bg-surface-container-high border border-white/5 hover:border-primary/20 hover:bg-surface-container-highest transition-all duration-300">
+      {isHighScore && (
+        <div className="absolute inset-0 bg-primary/2 blur-[20px] rounded-xl pointer-events-none group-hover:bg-primary/5 transition-all duration-300" />
+      )}
+      
       <div className="relative w-16 h-16 md:w-20 md:h-20 mb-3">
         <svg className="w-full h-full transform -rotate-90">
-          <circle cx="50%" cy="50%" r={radius} stroke="currentColor" strokeWidth="6" fill="transparent" className="text-white/5" />
-          <circle cx="50%" cy="50%" r={radius} stroke="currentColor" strokeWidth="6" strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" fill="transparent" className="text-primary transition-all duration-300 ease-out" />
+          <defs>
+            <filter id="score-glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <linearGradient id="score-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#6bd8cb" />
+              <stop offset="100%" stopColor="#0d9488" />
+            </linearGradient>
+          </defs>
+          <circle cx="50%" cy="50%" r={radius} stroke="currentColor" strokeWidth="8" fill="transparent" className="text-white/5" />
+          <circle
+            cx="50%"
+            cy="50%"
+            r={radius}
+            stroke="url(#score-gradient)"
+            strokeWidth="8"
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+            strokeLinecap="round"
+            fill="transparent"
+            filter={isHighScore ? "url(#score-glow)" : undefined}
+            className="transition-all duration-300 ease-out"
+          />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-base md:text-lg font-bold text-text tabular-nums">{displayed}%</span>
+          <span
+            className="text-base md:text-lg font-bold text-text tabular-nums flex items-baseline"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <span>{displayed}</span>
+            <span className="text-[10px] text-muted ml-0.5">%</span>
+          </span>
         </div>
       </div>
-      <span className="text-[9px] font-bold uppercase tracking-widest text-muted">
+      <span className="text-[9px] font-bold uppercase tracking-widest text-muted relative z-10">
         {label}
       </span>
     </div>

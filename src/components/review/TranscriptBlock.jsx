@@ -9,7 +9,7 @@ export function TranscriptBlock({ transcript, speechMetrics }) {
     <Card padding="lg" as="section" className="bg-surface-container-low border-white/5">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-sm font-bold uppercase tracking-widest text-primary">
-          Voice Transcript
+          Transcript
         </h3>
         <div className="flex gap-2">
            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
@@ -21,13 +21,15 @@ export function TranscriptBlock({ transcript, speechMetrics }) {
       <div className="relative mb-8">
         <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary/10 rounded-full" />
         <p className="text-base text-text leading-relaxed font-medium italic opacity-90">
-          "{transcript}"
+          <span>"</span>
+          <span>{transcript}</span>
+          <span>"</span>
         </p>
       </div>
 
       {speechMetrics && (
         <div className="flex flex-col gap-4 pt-6 border-t border-white/5">
-          <h4 className="text-[10px] font-bold text-muted uppercase tracking-widest">Speech Analysis</h4>
+          <h4 className="text-[10px] font-bold text-muted uppercase tracking-widest">Speech Metrics</h4>
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex flex-col gap-1 px-4 py-2 rounded-lg bg-white/2 border border-white/5">
                <span className="text-[10px] text-muted uppercase font-bold">Pace</span>
@@ -36,12 +38,12 @@ export function TranscriptBlock({ transcript, speechMetrics }) {
             <div className="flex flex-col gap-1 px-4 py-2 rounded-lg bg-white/2 border border-white/5">
                <span className="text-[10px] text-muted uppercase font-bold">Fillers</span>
                <span className={`text-sm font-bold ${fillerWordCount === 0 ? 'text-primary' : 'text-error'}`}>
-                {fillerWordCount} {fillerWordCount === 1 ? 'word' : 'words'}
+                {fillerWordCount} {fillerWordCount === 1 ? 'filler word' : 'filler words'}
                </span>
             </div>
             <div className="flex flex-col gap-1 px-4 py-2 rounded-lg bg-white/2 border border-white/5">
                <span className="text-[10px] text-muted uppercase font-bold">AI Conf.</span>
-               <span className="text-sm font-bold text-text">{confidencePercent}%</span>
+               <span className="text-sm font-bold text-text">{confidencePercent}% confidence</span>
             </div>
           </div>
         </div>

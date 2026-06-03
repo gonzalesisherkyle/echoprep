@@ -46,13 +46,15 @@ export function SessionSummary({ session, answers }) {
             {answers.map((answer, index) => {
               const scores = answer.scores ?? {};
               const key = answer._id ?? answer.questionId ?? String(index);
+              const avgScore = Math.round(((scores.clarity || 0) + (scores.relevance || 0) + (scores.confidence || 0)) / 3);
+
               return (
                 <div
                   key={key}
-                  className="flex flex-col gap-4 p-5 rounded-xl bg-white/2 border border-white/5 hover:border-primary/20 transition-all group"
+                  className="flex flex-col gap-4 p-5 rounded-xl bg-white/2 border border-white/5 hover:border-primary/20 hover:bg-surface-container-high transition-all duration-300 group"
                 >
                   <div className="flex items-center justify-between">
-                     <span className="text-sm font-bold text-text group-hover:text-primary transition-colors">
+                     <span className="text-sm font-bold text-text group-hover:text-primary transition-colors duration-300">
                       Question 0{index + 1}
                      </span>
                      <div className="h-px flex-1 mx-4 bg-white/5 hidden sm:block" />
@@ -60,10 +62,18 @@ export function SessionSummary({ session, answers }) {
                         <div className="flex flex-col items-end">
                            <span className="text-[10px] uppercase font-bold text-muted">Avg</span>
                            <span className="text-sm font-bold text-text">
-                            {Math.round(((scores.clarity || 0) + (scores.relevance || 0) + (scores.confidence || 0)) / 3)}%
+                            {avgScore}%
                            </span>
                         </div>
                      </div>
+                  </div>
+
+                  {/* Micro Progress Bar */}
+                  <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-primary/50 to-primary transition-all duration-500 ease-out" 
+                      style={{ width: `${avgScore}%` }}
+                    />
                   </div>
                   
                   <div className="flex flex-wrap gap-6 border-t border-white/5 pt-4">
@@ -91,4 +101,3 @@ export function SessionSummary({ session, answers }) {
 }
 
 export default SessionSummary;
-

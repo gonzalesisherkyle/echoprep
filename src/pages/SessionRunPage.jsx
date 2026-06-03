@@ -14,8 +14,8 @@ const MIN_DURATION_MS = 2_000;
 const MAX_DURATION_MS = 300_000;
 
 function validateDuration(durationMs) {
-  if (durationMs < MIN_DURATION_MS) return `Too short (${(durationMs/1000).toFixed(1)}s). Min 2s.`;
-  if (durationMs > MAX_DURATION_MS) return `Too long. Max 5m.`;
+  if (durationMs < MIN_DURATION_MS) return `too short (${(durationMs/1000).toFixed(1)}s). Min 2s.`;
+  if (durationMs > MAX_DURATION_MS) return `too long. Max 5m.`;
   return null;
 }
 
@@ -33,6 +33,7 @@ export function SessionRunPage() {
   const [pendingDurationMs, setPendingDurationMs] = useState(null);
   const [durationError, setDurationError] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
 
   const handleRecorded = useCallback((blob, durationMs) => {
     setDurationError(validateDuration(durationMs));
@@ -106,17 +107,62 @@ export function SessionRunPage() {
 
   return (
     <AppShell>
-      <div className="mx-auto max-w-4xl flex flex-col gap-8 md:gap-12">
-        <header className="flex flex-col gap-3">
-           <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-primary">In Progress</span>
-              <span className="text-xs font-mono text-muted">{currentIndex + 1} of {questions.length}</span>
+      <div className="mx-auto max-w-4xl flex flex-col gap-10 md:gap-16">
+        <header className="flex flex-col gap-6">
+           <div className="flex items-center justify-between border-b border-white/5 pb-3">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">In Progress</span>
+              <span className="text-xs font-mono text-muted">Question {currentIndex + 1} of {questions.length}</span>
            </div>
-           <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-primary transition-all duration-500 ease-out shadow-sm" 
-                style={{ width: `${progress}%` }} 
-              />
+           
+           {/* Horizontal Stepper */}
+           <div className="relative flex items-center justify-between w-full px-4">
+             {/* Background Thin Line */}
+             <div className="absolute left-8 right-8 top-4 h-[2px] bg-white/5 -translate-y-1/2 -z-10" />
+             {/* Foreground Progress Line */}
+             <div 
+               className="absolute left-8 top-4 h-[2px] bg-primary/40 -translate-y-1/2 -z-10 transition-all duration-500 ease-out" 
+               style={{ 
+                 width: questions.length > 1 
+                   ? `calc(${(currentIndex / (questions.length - 1)) * 100}% - 2px)` 
+                   : '0%' 
+               }} 
+             />
+
+             {questions.map((q, idx) => {
+               const isCompleted = idx < currentIndex;
+               const isCurrent = idx === currentIndex;
+
+               return (
+                 <div key={q._id || q.id || idx} className="flex flex-col items-center relative">
+                   <div 
+                     className={`
+                       w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 relative z-10
+                       ${isCompleted 
+                         ? 'bg-primary text-on-primary shadow-lg shadow-primary/20 scale-105' 
+                         : isCurrent 
+                           ? 'bg-surface-container-high border-2 border-primary text-primary' 
+                           : 'bg-surface-container-low border border-white/10 text-muted'}
+                     `}
+                   >
+                     {isCompleted ? (
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" className="w-3.5 h-3.5">
+                         <polyline points="20 6 9 17 4 12" />
+                       </svg>
+                     ) : (
+                       <span>{idx + 1}</span>
+                     )}
+
+                     {/* Pulsing teal outer ring for current step */}
+                     {isCurrent && (
+                       <span className="absolute -inset-1.5 rounded-full border-2 border-primary/45 animate-pulse" />
+                     )}
+                   </div>
+                   <span className={`text-[9px] font-bold uppercase tracking-widest mt-2.5 transition-colors duration-300 ${isCurrent ? 'text-primary' : 'text-muted'}`}>
+                     Q{idx + 1}
+                   </span>
+                 </div>
+               );
+             })}
            </div>
         </header>
 
@@ -129,7 +175,14 @@ export function SessionRunPage() {
           </div>
 
           <div className="lg:col-span-2 flex flex-col gap-6">
-            <Card padding="md" className="flex flex-col items-center gap-6 bg-surface-container-high border-white/5">
+            <Card
+              padding="md"
+              className={`flex flex-col items-center gap-6 bg-surface-container-high transition-all duration-300 ${
+                isRecording
+                  ? 'border-primary/30 shadow-[0_0_25px_rgba(107,216,203,0.15)] scale-[1.01] ring-1 ring-primary/20'
+                  : 'border-white/5'
+              }`}
+            >
               <div className="text-center">
                 <h2 className="text-base font-bold text-text">Record Answer</h2>
                 <p className="text-[10px] text-muted">Tap to start/stop</p>
@@ -137,6 +190,7 @@ export function SessionRunPage() {
 
               <AudioRecorder
                 onRecorded={handleRecorded}
+                onRecordingStateChange={setIsRecording}
                 isReducedMotion={isReducedMotion}
                 isDisabled={isBusy || uploadDone}
               />
@@ -150,7 +204,7 @@ export function SessionRunPage() {
               )}
 
               {durationError && (
-                <div className="px-3 py-1.5 rounded bg-error/10 border border-error/20 text-xs text-error font-medium text-center">
+                <div role="alert" className="px-3 py-1.5 rounded bg-error/10 border border-error/20 text-xs text-error font-medium text-center">
                   {durationError}
                 </div>
               )}
